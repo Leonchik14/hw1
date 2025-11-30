@@ -40,20 +40,10 @@
 - Make (опционально, для удобства запуска)
 - Python 3.9-3.12 (рекомендуется 3.11 или 3.12, Python 3.14 может иметь проблемы совместимости)
 
-**Примечание:** Для локального запуска Minikube не обязателен. См. [TROUBLESHOOTING.md](TROUBLESHOOTING.md) для решения проблем.
-
 ### Локальный запуск (без Kubernetes)
 
 1. Создайте необходимые директории:
 
-**Windows (PowerShell):**
-```powershell
-# Вариант 1: Используйте скрипт
-.\create_dirs.ps1
-
-# Вариант 2: Вручную
-New-Item -ItemType Directory -Force -Path app/models, app/data, models, data
-```
 
 **Linux/Mac (Bash):**
 ```bash
@@ -68,9 +58,6 @@ python -m pip install --upgrade pip
 # Установите зависимости
 pip install -r requirements.txt
 ```
-
-**Примечание:** Если возникают проблемы с установкой scikit-learn на Python 3.14, используйте Python 3.11 или 3.12. См. [TROUBLESHOOTING.md](TROUBLESHOOTING.md)
-
 3. Настройте переменные окружения (создайте `.env` файл):
 ```env
 CLEARML_API_ACCESS_KEY=your_key
@@ -310,12 +297,3 @@ MODEL_REGISTRY = {
     'my_model': MyModel  # Добавить здесь
 }
 ```
-
-## Логгирование
-
-Все важные действия логгируются через стандартный Python logger. Логи доступны в консоли и могут быть перенаправлены в файл.
-
-## Лицензия
-
-MIT
-
