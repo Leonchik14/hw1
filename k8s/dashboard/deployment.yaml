@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-dashboard
+  labels:
+    app: mlops-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlops-dashboard
+  template:
+    metadata:
+      labels:
+        app: mlops-dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: mlops-dashboard:latest
+        imagePullPolicy: Never  # Use local image in minikube
+        ports:
+        - containerPort: 8501
+          name: http
+        env:
+        - name: API_BASE_URL
+          value: "http://mlops-api:8000/api/v1"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlops-dashboard
+  labels:
+    app: mlops-dashboard
+spec:
+  type: NodePort
+  ports:
+  - port: 8501
+    targetPort: 8501
+    nodePort: 30085
+    name: http
+  selector:
+    app: mlops-dashboard
+
+
+
+

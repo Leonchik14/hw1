@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlops-api
+  labels:
+    app: mlops-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlops-api
+  template:
+    metadata:
+      labels:
+        app: mlops-api
+    spec:
+      containers:
+      - name: api
+        image: mlops-api:latest
+        imagePullPolicy: Never  # Use local image in minikube
+        ports:
+        - containerPort: 8000
+          name: http
+        env:
+        - name: MINIO_ENDPOINT
+          value: "minio:9000"
+        - name: MINIO_ACCESS_KEY
+          value: "minioadmin"
+        - name: MINIO_SECRET_KEY
+          value: "minioadmin"
+        - name: MINIO_BUCKET
+          value: "mlops"
+        - name: CLEARML_API_HOST
+          value: "http://localhost:8008"
+        - name: CLEARML_WEB_HOST
+          value: "http://localhost:8080"
+        - name: MODELS_DIR
+          value: "/app/models"
+        - name: DATASETS_DIR
+          value: "/app/data"
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: data
+          mountPath: /app/data
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+      volumes:
+      - name: models
+        persistentVolumeClaim:
+          claimName: models-pvc
+      - name: data
+        persistentVolumeClaim:
+          claimName: data-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlops-api
+  labels:
+    app: mlops-api
+spec:
+  type: NodePort
+  ports:
+  - port: 8000
+    targetPort: 8000
+    nodePort: 30080
+    name: http
+  selector:
+    app: mlops-api
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: models-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+

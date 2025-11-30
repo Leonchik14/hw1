@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package mlops;
+
+// Service for ML model management
+service MLModelService {
+  // Health check
+  rpc HealthCheck (HealthRequest) returns (HealthResponse);
+  
+  // Get available model classes
+  rpc GetAvailableModels (Empty) returns (AvailableModelsResponse);
+  
+  // List all trained models
+  rpc ListModels (Empty) returns (ModelsListResponse);
+  
+  // Train a new model
+  rpc TrainModel (TrainRequest) returns (TrainResponse);
+  
+  // Get predictions from a model
+  rpc Predict (PredictRequest) returns (PredictResponse);
+  
+  // Retrain an existing model
+  rpc RetrainModel (RetrainRequest) returns (TrainResponse);
+  
+  // Delete a model
+  rpc DeleteModel (DeleteModelRequest) returns (DeleteModelResponse);
+  
+  // List datasets
+  rpc ListDatasets (Empty) returns (DatasetsListResponse);
+}
+
+message Empty {}
+
+message HealthRequest {}
+
+message HealthResponse {
+  string status = 1;
+  string version = 2;
+}
+
+message AvailableModelsResponse {
+  repeated string model_classes = 1;
+}
+
+message TrainRequest {
+  string model_class = 1;
+  string hyperparameters_json = 2;  // JSON string with hyperparameters
+  string dataset_name = 3;
+}
+
+message TrainResponse {
+  string model_id = 1;
+  string metrics_json = 2;  // JSON string with metrics
+  string message = 3;
+}
+
+message PredictRequest {
+  string model_id = 1;
+  repeated FeatureVector features = 2;
+}
+
+message FeatureVector {
+  repeated double values = 1;
+}
+
+message PredictResponse {
+  repeated string predictions = 1;  // JSON strings for flexibility
+}
+
+message RetrainRequest {
+  string model_id = 1;
+  string dataset_name = 2;
+  string hyperparameters_json = 3;  // Optional, JSON string
+}
+
+message DeleteModelRequest {
+  string model_id = 1;
+}
+
+message DeleteModelResponse {
+  string message = 1;
+}
+
+message ModelInfo {
+  string model_id = 1;
+  bool is_trained = 2;
+  string hyperparameters_json = 3;
+}
+
+message ModelsListResponse {
+  repeated ModelInfo models = 1;
+}
+
+message DatasetInfo {
+  string name = 1;
+  string path = 2;
+  int64 size = 3;
+}
+
+message DatasetsListResponse {
+  repeated DatasetInfo datasets = 1;
+}
+
+
+
+

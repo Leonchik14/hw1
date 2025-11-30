@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  clearml-server:
+    image: allegroai/clearml-server:latest
+    container_name: clearml-server
+    ports:
+      - "8080:8080"
+      - "8008:8008"
+    environment:
+      - CLEARML_HOST_IP=localhost
+    volumes:
+      - clearml-data:/opt/clearml/data
+      - clearml-logs:/opt/clearml/logs
+      - clearml-elastic:/opt/clearml/elastic_7
+    networks:
+      - mlops-network
+
+  clearml-agent:
+    image: allegroai/clearml-agent:latest
+    container_name: clearml-agent
+    environment:
+      - CLEARML_API_HOST=http://clearml-server:8008
+      - CLEARML_WEB_HOST=http://clearml-server:8080
+      - CLEARML_FILES_HOST=http://clearml-server:8081
+    depends_on:
+      - clearml-server
+    networks:
+      - mlops-network
+
+volumes:
+  clearml-data:
+  clearml-logs:
+  clearml-elastic:
+
+networks:
+  mlops-network:
+    driver: bridge
+
+
+
+

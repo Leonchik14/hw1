@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+
+# DVC
+.dvc/
+*.dvc
+data/
+.dvcignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# ClearML
+clearml.conf
+
+# Kubernetes
+*.kubeconfig
+
+
+
+
